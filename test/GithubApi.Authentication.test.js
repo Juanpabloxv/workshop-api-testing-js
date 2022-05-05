@@ -1,4 +1,3 @@
-/* eslint-disable import/prefer-default-export */
 const agent = require('superagent');
 const statusCode = require('http-status-codes');
 const { expect } = require('chai');
@@ -6,8 +5,6 @@ const { expect } = require('chai');
 const urlBase = 'https://api.github.com';
 const githubUserName = 'Juanpabloxv';
 const repository = 'workshop-api-testing-js';
-
-// const ACCESS_TOKEN = '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';
 
 describe('Github Api Test', () => {
   describe('Authentication', () => {
@@ -21,7 +18,7 @@ describe('Github Api Test', () => {
     });
 
     it('Via OAuth2 Tokens by parameter', () => agent.get(`${urlBase}/repos/${githubUserName}/${repository}`)
-      .query(`access_token=${process.env.ACCESS_TOKEN}`)
+      .query(`token=${process.env.ACCESS_TOKEN}`)
       .set('User-Agent', 'agent')
       .then((response) => {
         expect(response.status).to.equal(statusCode.OK);
