@@ -14,7 +14,8 @@ function random(min, max) {
 }
 
 describe('Pruebas API.test', () => {
-  let itemId, firstItemQuality;
+  let itemId; let
+    firstItemQuality;
   before(async () => {
     const query = {
       name: 'CHITOS',
@@ -27,7 +28,7 @@ describe('Pruebas API.test', () => {
       response.body.forEach(async (item) => { await agent.delete(`${urlBase}/${item.id}`); });
     }
     const response2 = await agent.post(`${urlBase}`).send(query);
-    firstItemQuality= response2.body.quality;
+    firstItemQuality = response2.body.quality;
     itemId = response2.body.id;
   });
   it('Consume GET service with endpoint get item', async () => {
@@ -42,7 +43,7 @@ describe('Pruebas API.test', () => {
     expect(response.status).to.equal(statusCode.OK);
     expect(response.body).to.be.jsonSchema(ListItemSchema);
   });
-  
+
   it('Consume POST service with endpoint create item', async () => {
     const query2 = {
       name: 'CHOCOSO',
@@ -54,12 +55,12 @@ describe('Pruebas API.test', () => {
     expect(response.status).to.equal(statusCode.CREATED);
     expect(response.body).to.be.jsonSchema(ItemSchema);
   });
-  
+
   it('Consume UPDATE service with endpoint update quality', async () => {
     const response = await agent.post(`${urlBase}/quality`);
     expect(response.status).to.equal(statusCode.OK);
     expect(response.body).to.be.jsonSchema(ListItemSchema);
-    expect(response.body[0].quality).to.equal(firstItemQuality-1);
+    expect(response.body[0].quality).to.equal(firstItemQuality - 1);
   });
 
   it('Consume UPDATE service with endpoint update item', async () => {
@@ -72,10 +73,16 @@ describe('Pruebas API.test', () => {
     const response = await agent.put(`${urlBase}/${itemId}`).send(query);
     expect(response.status).to.equal(statusCode.OK);
   });
-  
+
   it('Consume DELETE service with endpoint delete item', async () => {
     const response = await agent.delete(`${urlBase}/${itemId}`);
     expect(response.status).to.equal(statusCode.OK);
   });
-  
+
+  after(async () => {
+    const response = await agent.get(`${urlBase}`);
+    if (response.body.length > 0) {
+      response.body.forEach(async (item) => { await agent.delete(`${urlBase}/${item.id}`); });
+    }
+  });
 });
